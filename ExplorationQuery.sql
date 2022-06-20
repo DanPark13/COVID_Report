@@ -17,14 +17,20 @@ WHERE continent IS NOT NULL and location != 'North Korea'
 GROUP BY Location, Population
 ORDER BY infected_death_percentage DESC;
 
--- Shows total death count by continent
+-- Total death count by continent
 SELECT continent, MAX(cast(Total_deaths as int)) as total_death_count
 FROM COVID19_Analysis..['covid-deaths']
 WHERE continent IS NOT NULL
 GROUP BY continent
 ORDER BY total_death_count DESC;
 
--- Shows the percentage of total deaths and cases
+-- Percentage of total deaths and cases
 SELECT SUM(new_cases) AS total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int))/SUM(New_Cases)*100 as death_percentage
 FROM COVID19_Analysis..['covid-deaths']
-WHERE continent IS NOT NULL;
+WHERE continent IS NOT NULL; 
+
+-- Percentaged of Population Infected Over Time
+SELECT Location, Population,date, MAX(total_cases) as HighestInfectionCount,  MAX((total_cases/population))*100 as PercentPopulationInfected
+FROM COVID19_Analysis..['covid-deaths']
+GROUP BY Location, Population, date
+ORDER BY PercentPopulationInfected DESC
